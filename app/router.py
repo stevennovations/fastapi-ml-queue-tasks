@@ -5,6 +5,7 @@ from celery.result import AsyncResult
 from fastapi.responses import JSONResponse
 from nike_forecasting.prediction import validate
 from fastapi import Request
+import json
 
 forecast_router = APIRouter()
 
@@ -33,7 +34,8 @@ async def invoke_prediction(date_str: str):
         raise HTTPException(status_code=422, detail="Wrong date format: \
                             YYYYmmdd (ex. 20220923)")
     task_id = predict_forecast.delay(date_str)
-    return {'task_id': str(task_id), 'status': 'Processing'}
+    return {'task_id': str(task_id), 'status': 'Processing',
+            'content': {'sample_prediction': 0}}
 
 
 @forecast_router.get('/test-point/', response_model=Task, status_code=202)
@@ -46,11 +48,16 @@ async def test_endpoint(date_str: str, request: Request):
     Returns:
         json: the json object from the task
     """
-    print(request.app)
-    request.app.state.redis.set(f'testing:{date_str}')
-    content = request.app.state.redis.get(f'testing:{date_str}')
+    # print(request.app)
+    # json_content = {'task_id': str(date_str), 'status': 'Processing'}
+    # await request.app.state.redis.set(f'testing:{date_str}',
+    #                                   json.dumps(json_content))
+    prefix_url = 'forecast-prediction'
+    content = await request.app.state.redis.get(f'{prefix_url}:{date_str}')
+    print(content)
+    content = json.loads(content)
     return {'task_id': str(date_str), 'status': 'Processing',
-            'content': content}
+            'content': {'sample_prediction': content}}
 
 
 @forecast_router.get('/result/{task_id}', response_model=Result,

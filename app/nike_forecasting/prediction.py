@@ -81,8 +81,6 @@ def predict(date_str: str):
     unseen_test = create_features(df)
 
     prediction = loaded_reg.predict(unseen_test[FEATURES])
-    print(prediction)
-    content = {"body": "healthy", "date": date_val,
-               "prediction": str(prediction[0])}
+    celery_log.info(f'Prediction Result: {prediction}')
     celery_log.info('Predict task completed')
-    return content
+    return str(prediction[0])

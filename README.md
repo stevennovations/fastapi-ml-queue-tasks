@@ -1,60 +1,23 @@
-https://github.com/anthcor/firestore-fastapi/tree/master/docs
+# FastAPI Sales Forecasting API
+
+![fastapi-redis](/img/architecture.png)
+
+This sample app demonstrates a prediction API that uses an XGBoost Model. It is implemented with Celery distributed task queues on top of RabbitMQ broker for prediction. API request comes through FastAPI and it is being processed asynchronously by Celery. There is a separate API endpoint to check task status. Multiple requests can be initiated and processed at the same time in parallel. Celery tasks can be monitored using Flower monitoring tool. Once the task prediction finishes it saves the forecast on redis cache that when the request is re-requested will be sent to the user as response.
 
 
-Updating Fulfillment response parameters:
-https://botflo.com/updating-dialogflow-cx-parameters-from-webhook/
+* Celery [documentation](https://docs.celeryproject.org/en/stable/index.html)
+* [Flower](https://flower.readthedocs.io/en/latest/) - Celery monitoring tool
 
-https://stackoverflow.com/questions/64646879/dialogflow-cx-webhook-for-fulfilment-to-reply-user-using-nodejs
-https://stackoverflow.com/questions/68838654/dialogflow-cx-transition-to-another-page-from-webhook
-https://cloud.google.com/dialogflow/cx/docs/concept/fulfillment
+## Commands (executed from celery-web folder)
 
-https://developers.google.com/assistant/df-asdk/reference/dialogflow-webhook-json
+* Start FastAPI endpoint
+  * **uvicorn endpoint:app --reload**
+* Start Celery worker
+  * **celery -A nike_forecasting.worker worker --loglevel=INFO**
+* Start Flower monitoring dashboard
+  * **celery -A nike_forecasting.worker --broker=pyamqp://guest@localhost// flower**
 
-https://fastapi.tiangolo.com/tutorial/first-steps/
+## URL's
 
-uvicorn main:app --reload
-./ngrok http 80
-
-
-gcloud builds submit --tag gcr.io/ml-marcus-certification/health_bot_api
-
-gcloud run deploy --image gcr.io/ml-marcus-certification/health_bot_api --platform managed
-
-https://blog.somideolaoye.com/fastapi-deploy-containerized-apps-on-google-cloud-run
-
-https://cloud.google.com/dialogflow/cx/docs/reference/rpc/google.cloud.dialogflow.cx.v3#webhookresponse
-
-ce4ce796ff71b66303b792736bc239bd
-EAANfVCUwBx0BACTsZBmW0HdlUvBNrM8ou8zc516RCqZCvrouCGXHXCcvajZBGKKyDYRADXZChwIh3oltZCl10UVimYPEOd2XxpxSFjdZB5GlNKvygtcp26fZBtYzcDbw9E3l0o88kLG2ShAyw0QWZAj4y43ZC4ZA1YjCDduO4VJD4kqJ8zCZB8yNCUZANUDBrLIh0DPOcD1H0OZA8aQZDZD
-healthbot-dlsu-project-test-1
-
-# https://github.com/anthcor/firestore-fastapi/tree/master/docs
-
-
-Ako nga pala si Dr. Dhelia, ang iyong doktor na magtatanong sa iyong kalusugan ngayon.
-
-"messaging_type": "RESPONSE",
-  "message":
-
-  {
-    "text": " Ano ang pangalan mo?"
-  }
-
-  {
-    "text": "Ilang taon ka na?",
-  }
-
-  {
-    "text": "Ano kasarian mo lalake o babae?",
-    "quick_replies":[
-      {
-        "content_type":"text",
-        "title":"Red",
-        "payload":"<POSTBACK_PAYLOAD>"
-      },{
-        "content_type":"text",
-        "title":"Green",
-        "payload":"<POSTBACK_PAYLOAD>"
-      }
-    ]
-  }
+* API url: http://127.0.0.1:8000/api/v1/nikeforecasting/docs
+* Flower url: http://127.0.0.1:5555/tasks

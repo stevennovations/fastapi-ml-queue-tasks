@@ -9,6 +9,7 @@ class Task(BaseModel):
     # Celery task representation
     task_id: str
     status: str
+    content: dict
 
 
 class Result(BaseModel):

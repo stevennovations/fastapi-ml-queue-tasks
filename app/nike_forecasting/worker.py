@@ -1,8 +1,11 @@
 from celery import Celery
+from nike_forecasting.utils import config
+
+global_settings = config.Settings()
 
 app = Celery(
     'celery_web',
     broker='pyamqp://guest@localhost//',
-    backend='rpc://',
+    backend=global_settings.redis_url,
     include=['nike_forecasting.tasks']
 )

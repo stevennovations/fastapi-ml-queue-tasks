@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from utils import config
-from utils.redis import init_redis_pool
+from nike_forecasting.utils import config
+from nike_forecasting.utils.redis import init_redis_pool
 from router import forecast_router
-from utils.log_config import get_logger
+from nike_forecasting.utils.log_config import get_logger
 
 description = """
 Forecasting API helps you assess the demand for a particular date. 🚀

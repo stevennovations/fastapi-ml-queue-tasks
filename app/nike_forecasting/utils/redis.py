@@ -1,5 +1,5 @@
 import redis.asyncio as redis
-from utils import config
+from nike_forecasting.utils import config
 
 global_settings = config.Settings()
 
