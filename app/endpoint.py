@@ -15,8 +15,11 @@ You will be able to:
 * **Get demand for specific date** (_not implemented_).
 """
 
+# Gets logger for the application
 logger = get_logger(__name__)
-global_settings = config.Settings()
+global_settings = config.Settings()  # configuration settings loading
+
+# this can be changed and moved to env files
 app = FastAPI(title='nike-forecasting-app',
               docs_url='/api/v1/nikesalesforecast/docs')
 
@@ -33,12 +36,16 @@ app.include_router(forecast_router, prefix='/api/v1/nikesalesforecast')
 
 @app.on_event("startup")
 async def startup_event():
+    """Startup event that connects to a redis pool connection.
+    """
     logger.info("Opening mols bakery...")
     app.state.redis = await init_redis_pool()
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
+    """Shutsdown the redis pool connections.
+    """
     logger.info("Closing mols bakery...")
     await app.state.redis.close()
 
@@ -46,6 +53,15 @@ async def shutdown_event():
 @app.get("/health-check")
 async def health_check(settings: config.Settings = Depends(config.get_settings)
                        ):
+    """This checks the state of the api server.
+
+    Args:
+        settings (config.Settings, optional): Defaults to
+        Depends(config.get_settings).
+
+    Returns:
+        dict: The settings of the webserver check
+    """
     try:
         await app.state.redis.set(str(settings.redis_url), settings.up)
         value = await app.state.redis.get(str(settings.redis_url))

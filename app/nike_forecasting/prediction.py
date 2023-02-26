@@ -14,10 +14,10 @@ FEATURES = ['dayofweek', 'quarter', 'month',
 
 
 def load_model():
-    """_summary_
+    """ Loads and returns the model.
 
     Returns:
-        _type_: _description_
+        model (XGBRegressor): returns regression model. 
     """
     celery_log.info(ROOT_DIR)
     loaded_reg = xgb.XGBRegressor()
@@ -27,13 +27,13 @@ def load_model():
 
 
 def create_features(df):
-    """_summary_
+    """ Returns the dataframe of features for a specific date
 
     Args:
-        df (_type_): _description_
+        df (dataframe): A dataframe of dates for prediction
 
     Returns:
-        _type_: _description_
+        df (dataframe): A dataframe of dates for prediction with features
     """
     df = df.copy()
     df['dayofweek'] = df.index.dayofweek
@@ -47,13 +47,13 @@ def create_features(df):
 
 
 def validate(date_text):
-    """_summary_
+    """ Validates the text argument if date format is valid or not.
 
     Args:
-        date_text (_type_): _description_
+        date_text (str): A date string in the format YYYYmmdd (hopefully).
 
     Returns:
-        _type_: _description_
+        date_val (datetime): Returns datetime object. Either None or with value
     """
     try:
         date_val = datetime.strptime(date_text, '%Y%m%d')
@@ -65,13 +65,13 @@ def validate(date_text):
 
 
 def predict(date_str: str):
-    """_summary_
+    """ Predicts based on the date given
 
     Args:
-        date_str (str): _description_
+        date_str (str): A date string in the format YYYYmmdd (hopefully).
 
     Returns:
-        _type_: _description_
+        (str) : returns a prediction value.
     """
     date_val = validate(date_str)
     date_val = date_val.strftime('%Y-%m-%d')

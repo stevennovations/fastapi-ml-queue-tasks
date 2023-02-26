@@ -9,6 +9,14 @@ console = Console(color_system="256", width=150, style="blue")
 
 @lru_cache()
 def get_logger(module_name):
+    """Logger of the application
+
+    Args:
+        module_name (str): Name of the module where the logger was used.
+
+    Returns:
+        logger: Returns Logger object.
+    """
     logger = logging.getLogger(module_name)
     handler = RichHandler(rich_tracebacks=True, console=console,
                           tracebacks_show_locals=True)

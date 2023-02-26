@@ -11,6 +11,8 @@ logger = get_logger(__name__)
 
 
 class Settings(BaseSettings):
+    """ Settings of BaseSettings
+    """
     environment: str = os.getenv("ENVIRONMENT", "dev")
     testing: str = os.getenv("TESTING", "0")
     redis_url: AnyUrl = os.environ.get("REDIS_URL", "redis://localhost")
@@ -24,5 +26,10 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings() -> BaseSettings:
+    """Returns the base settings.
+
+    Returns:
+        BaseSettings: Returns the base settings of the application.
+    """
     logger.info("Loading config settings from the environment...")
     return Settings()

@@ -3,6 +3,7 @@ from nike_forecasting.utils import config
 
 global_settings = config.Settings()
 
+# Creates an app worker
 app = Celery(
     'celery_web',
     broker='pyamqp://guest@localhost//',

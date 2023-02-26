@@ -19,5 +19,5 @@ This sample app demonstrates a prediction API that uses an XGBoost Model. It is 
 
 ## URL's
 
-* API url: http://127.0.0.1:8000/api/v1/nikeforecasting/docs
+* API url: http://127.0.0.1:8000/api/v1/nikesalesforecast/docs
 * Flower url: http://127.0.0.1:5555/tasks
